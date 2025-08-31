@@ -1,0 +1,33 @@
+# General IDE, OS, and Editor files
+.idea/
+.vscode/
+.sts4-cache/
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+*.iml
+*.ipr
+*.iws
+.DS_Store
+
+# Backend specific (Java/Maven)
+/backend/target/
+/backend/HELP.md
+/backend/.mvn/wrapper/maven-wrapper.jar
+
+# Frontend specific (Node.js)
+/frontend/node_modules/
+/frontend/dist/
+/frontend/dist-ssr/
+/frontend/*.local
+
+# Log files
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
