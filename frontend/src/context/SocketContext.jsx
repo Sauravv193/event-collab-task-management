@@ -15,7 +15,7 @@ export const SocketProvider = ({ children }) => {
       
       // The backend STOMP endpoint is '/ws'
       const client = new Client({
-        webSocketFactory: () => new SockJS('http://localhost:8080/ws'),
+        webSocketFactory: () => new SockJS(import.meta.env.VITE_WS_URL),
         connectHeaders: {
           // The interceptor expects an 'Authorization' header for authentication
           Authorization: `Bearer ${token}`,
