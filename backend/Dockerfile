@@ -10,7 +10,7 @@ RUN mvn clean package -DskipTests
 # Stage 2: Create the final, smaller image to run the application
 FROM openjdk:17-slim
 WORKDIR /app
-# Copy the JAR file from the 'build' stage
-COPY --from=build /app/target/event_based_task-0.0.1-SNAPSHOT.jar app.jar
+# Use a wildcard to copy the JAR file, making it more reliable
+COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
