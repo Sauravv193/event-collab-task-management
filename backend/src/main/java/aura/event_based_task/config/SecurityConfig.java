@@ -67,8 +67,12 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // Specifically allow your Vercel frontend URL
-        configuration.setAllowedOrigins(Arrays.asList("https://event-collab-task-management.vercel.app"));
+        // This new configuration allows the production URL, all Vercel preview URLs, and localhost
+        configuration.setAllowedOriginPatterns(Arrays.asList(
+            "https://event-collab-task-management.vercel.app",
+            "https://*-sauravv193s-projects.vercel.app",
+            "http://localhost:5173"
+        ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With"));
         configuration.setAllowCredentials(true);
