@@ -23,7 +23,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 
 @Configuration
-@EnableMethodSecurity // Replaced prePostEnabled = true for clarity, it's the default
+@EnableMethodSecurity
 public class SecurityConfig {
 
     @Bean
@@ -42,7 +42,6 @@ public class SecurityConfig {
     }
 
     @Bean
-    // This is crucial for @PreAuthorize with custom permissions to work
     public MethodSecurityExpressionHandler methodSecurityExpressionHandler(CustomPermissionEvaluator customPermissionEvaluator) {
         DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
         expressionHandler.setPermissionEvaluator(customPermissionEvaluator);
@@ -55,12 +54,8 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        // Public endpoints for authentication and WebSocket handshake
                         .requestMatchers("/api/auth/**", "/ws/**").permitAll()
-                        // Allow anyone to view events and tasks
                         .requestMatchers(HttpMethod.GET, "/api/events/**", "/api/tasks/**", "/api/events/{eventId}/is-member").permitAll()
-                        // *** FIX: Any other request MUST be authenticated. ***
-                        // This simplifies the rules and relies on @PreAuthorize for specific actions.
                         .anyRequest().authenticated()
                 );
 
@@ -72,7 +67,8 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(Arrays.asList("*"));
+        // Specifically allow your Vercel frontend URL
+        configuration.setAllowedOrigins(Arrays.asList("https://event-collab-task-management.vercel.app"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With"));
         configuration.setAllowCredentials(true);
