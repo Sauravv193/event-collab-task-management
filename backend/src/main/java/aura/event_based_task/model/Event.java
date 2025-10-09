@@ -13,8 +13,11 @@ import lombok.ToString;
 import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Table(name = "events")
@@ -50,6 +53,32 @@ public class Event {
     @Min(value = 1, message = "Maximum participants must be at least 1")
     @Column(name = "max_participants")
     private Integer maxParticipants;
+    
+    @Size(max = 50, message = "Category must be less than 50 characters")
+    @Column(name = "category")
+    private String category;
+    
+    @Size(max = 200, message = "Tags must be less than 200 characters")
+    @Column(name = "tags")
+    private String tags; // Comma-separated tags
+    
+    @Column(name = "is_recurring")
+    private Boolean isRecurring = false;
+    
+    @Size(max = 50, message = "Recurrence pattern must be less than 50 characters")
+    @Column(name = "recurrence_pattern")
+    private String recurrencePattern; // DAILY, WEEKLY, MONTHLY, etc.
+    
+    @Column(name = "image_url")
+    private String imageUrl;
+    
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+    
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "creator_id", nullable = false)
