@@ -11,6 +11,32 @@ services:
         value: 8080
       - key: SPRING_PROFILES_ACTIVE
         value: production
+      - key: SPRING_DATASOURCE_URL
+        sync: false
+      - key: SPRING_DATASOURCE_USERNAME
+        sync: false
+      - key: SPRING_DATASOURCE_PASSWORD
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CORS_ALLOWED_ORIGINS
+        value: "*"
+      - key: LOG_LEVEL
+        value: INFO
+      - key: SHOW_SQL
+        value: false
+      - key: DB_SSL_MODE
+        value: require
+      - key: DB_MAX_POOL_SIZE
+        value: 5
+      - key: DB_MIN_IDLE
+        value: 1
+      - key: DB_CONNECTION_TIMEOUT
+        value: 30000
+      - key: DB_INIT_FAIL_TIMEOUT
+        value: 1
+      - key: DB_VALIDATE_ON_MIGRATE
+        value: true
     healthCheckPath: /actuator/health
 
   # Frontend service (React)
