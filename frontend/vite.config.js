@@ -1,25 +1,31 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import { visualizer } from 'rollup-plugin-visualizer';
 import { resolve } from 'path';
 
 // https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [
+export default defineConfig(async () => {
+  const plugins = [
     react({
       // Enable React refresh
       fastRefresh: true,
       // Include .jsx files
       include: '**/*.{jsx,js}',
-    }),
-    // Bundle analyzer (only in build mode)
-    process.env.ANALYZE && visualizer({
+    })
+  ];
+
+  // Conditionally add visualizer plugin only when ANALYZE is set
+  if (process.env.ANALYZE) {
+    const { visualizer } = await import('rollup-plugin-visualizer');
+    plugins.push(visualizer({
       filename: 'dist/stats.html',
       open: true,
       gzipSize: true,
       brotliSize: true,
-    }),
-  ].filter(Boolean),
+    }));
+  }
+
+  return {
+  plugins,
   
   // Define global variables
   define: {
@@ -138,4 +144,5 @@ export default defineConfig({
     ],
     exclude: ['@tanstack/react-query-devtools'],
   },
+  };
 });
