@@ -29,7 +29,7 @@ export const SocketProvider = ({ children }) => {
     const token = localStorage.getItem('token');
     
     const client = new Client({
-      webSocketFactory: () => new SockJS('http://localhost:8080/ws'),
+      webSocketFactory: () => new SockJS(import.meta.env.VITE_WS_URL || 'http://localhost:8080/ws'),
       connectHeaders: {
         Authorization: `Bearer ${token}`,
       },
@@ -37,7 +37,7 @@ export const SocketProvider = ({ children }) => {
       heartbeatIncoming: 4000,
       heartbeatOutgoing: 4000,
       debug: (str) => {
-        if (process.env.NODE_ENV === 'development') {
+        if (import.meta.env.DEV) {
           console.log('STOMP Debug:', str);
         }
       },
