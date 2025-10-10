@@ -20,7 +20,7 @@ services:
       - key: JWT_SECRET
         generateValue: true
       - key: CORS_ALLOWED_ORIGINS
-        value: "*"
+        value: "https://event-task.vercel.app,http://localhost:5173,http://localhost:3000"
       - key: LOG_LEVEL
         value: INFO
       - key: SHOW_SQL
@@ -47,8 +47,8 @@ services:
     staticPublishPath: frontend/dist
     routes:
       - type: rewrite
-        source: /api/*
-        destination: https://event-collab-backend.onrender.com/api/:splat
+        source: /api/(.*)
+        destination: https://event-collab-backend.onrender.com/api/$1
       - type: rewrite
         source: /*
         destination: /index.html
