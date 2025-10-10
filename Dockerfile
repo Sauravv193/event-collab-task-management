@@ -13,7 +13,7 @@ COPY frontend/ .
 RUN npm run build
 
 # Backend build stage
-FROM maven:3.9.4-openjdk-21-slim as backend-builder
+FROM maven:3.9-openjdk-21 as backend-builder
 WORKDIR /app/backend
 
 # Copy Maven files first for better caching
