@@ -15,7 +15,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "tasks")
+@Table(name = "tasks", indexes = {
+    @Index(name = "idx_task_status", columnList = "status"),
+    @Index(name = "idx_task_priority", columnList = "priority"),
+    @Index(name = "idx_task_deadline", columnList = "deadline"),
+    @Index(name = "idx_task_assigned_to", columnList = "assigned_to_user_id"),
+    @Index(name = "idx_task_event", columnList = "event_id"),
+    @Index(name = "idx_task_created_at", columnList = "created_at")
+})
 @Data
 public class Task {
     @Id

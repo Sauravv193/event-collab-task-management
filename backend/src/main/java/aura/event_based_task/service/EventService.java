@@ -1,12 +1,20 @@
 package aura.event_based_task.service;
 
+import aura.event_based_task.dto.CreateEventRequest;
+import aura.event_based_task.dto.PaginatedResponse;
 import aura.event_based_task.exception.ResourceNotFoundException;
 import aura.event_based_task.model.Event;
 import aura.event_based_task.model.User;
 import aura.event_based_task.repository.EventRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,8 +34,27 @@ public class EventService {
     // *** FIX: Inject the messaging template to send WebSocket messages. ***
     @Autowired private SimpMessagingTemplate messagingTemplate;
 
-    public List<Event> getAllEvents() {
-        return eventRepository.findAll();
+    @Cacheable(value = "events", key = "#page + '_' + #size + '_' + (#category != null ? #category : 'all') + '_' + (#search != null ? #search : 'all')")
+    public PaginatedResponse<Event> getAllEvents(int page, int size, String category, String search) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Page<Event> eventPage;
+        
+        if (category != null && search != null) {
+            eventPage = eventRepository.findByCategoryContainingIgnoreCaseAndNameContainingIgnoreCase(category, search, pageable);
+        } else if (category != null) {
+            eventPage = eventRepository.findByCategoryContainingIgnoreCase(category, pageable);
+        } else if (search != null) {
+            eventPage = eventRepository.findByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(search, search, pageable);
+        } else {
+            eventPage = eventRepository.findAll(pageable);
+        }
+        
+        return PaginatedResponse.of(
+            eventPage.getContent(),
+            eventPage.getNumber(),
+            eventPage.getSize(),
+            eventPage.getTotalElements()
+        );
     }
 
     @Transactional(readOnly = true)
@@ -42,7 +69,9 @@ public class EventService {
     }
 
     @Transactional
-    public Event createEvent(Event event, User creator) {
+    public Event createEvent(CreateEventRequest request, User creator) {
+        Event event = new Event();
+        BeanUtils.copyProperties(request, event);
         event.setCreatedBy(creator);
         event.getMembers().add(creator);
         Event savedEvent = eventRepository.save(event);

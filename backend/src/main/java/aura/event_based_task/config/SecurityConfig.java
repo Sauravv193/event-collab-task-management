@@ -2,7 +2,9 @@ package aura.event_based_task.config;
 
 import aura.event_based_task.security.CustomPermissionEvaluator;
 import aura.event_based_task.security.JwtAuthenticationFilter;
+import aura.event_based_task.security.RateLimitFilter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -26,6 +28,7 @@ import java.util.List;
 
 @Configuration
 @EnableMethodSecurity // Replaced prePostEnabled = true for clarity, it's the default
+@EnableCaching
 public class SecurityConfig {
 
     @Value("${cors.allowed.origins:http://localhost:5173,http://localhost:3000}")
@@ -34,6 +37,11 @@ public class SecurityConfig {
     @Bean
     public JwtAuthenticationFilter authenticationJwtTokenFilter() {
         return new JwtAuthenticationFilter();
+    }
+
+    @Bean
+    public RateLimitFilter rateLimitFilter() {
+        return new RateLimitFilter();
     }
 
     @Bean
@@ -65,12 +73,13 @@ public class SecurityConfig {
                         // Allow Swagger documentation endpoints
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**").permitAll()
                         // Allow anyone to view events and tasks
-                        .requestMatchers(HttpMethod.GET, "/api/events/**", "/api/tasks/**", "/api/events/{eventId}/is-member").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/events/**", "/api/v1/tasks/**", "/api/v1/events/{eventId}/is-member").permitAll()
                         // *** FIX: Any other request MUST be authenticated. ***
                         // This simplifies the rules and relies on @PreAuthorize for specific actions.
                         .anyRequest().authenticated()
                 );
 
+        http.addFilterBefore(rateLimitFilter(), UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

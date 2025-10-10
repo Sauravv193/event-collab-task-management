@@ -2,6 +2,8 @@ package aura.event_based_task.repository;
 
 import aura.event_based_task.model.Event;
 import aura.event_based_task.model.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -24,4 +26,9 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     @Query("SELECT COUNT(e) > 0 FROM Event e JOIN e.members m WHERE e.id = :eventId AND m.username = :username")
     boolean isUserMember(@Param("eventId") Long eventId, @Param("username") String username);
+    
+    // Pagination and filtering methods
+    Page<Event> findByCategoryContainingIgnoreCase(String category, Pageable pageable);
+    Page<Event> findByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(String name, String description, Pageable pageable);
+    Page<Event> findByCategoryContainingIgnoreCaseAndNameContainingIgnoreCase(String category, String name, Pageable pageable);
 }

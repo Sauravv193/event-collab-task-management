@@ -20,7 +20,13 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
-@Table(name = "events")
+@Table(name = "events", indexes = {
+    @Index(name = "idx_event_date", columnList = "date"),
+    @Index(name = "idx_event_creator", columnList = "creator_id"),
+    @Index(name = "idx_event_category", columnList = "category"),
+    @Index(name = "idx_event_created_at", columnList = "created_at"),
+    @Index(name = "idx_event_name", columnList = "name")
+})
 @Getter
 @Setter
 @ToString(exclude = {"members", "tasks", "chatMessages"})

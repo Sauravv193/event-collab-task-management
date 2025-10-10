@@ -1,5 +1,7 @@
 package aura.event_based_task.controller;
 
+import aura.event_based_task.dto.CreateEventRequest;
+import aura.event_based_task.dto.PaginatedResponse;
 import aura.event_based_task.exception.ResourceNotFoundException;
 import aura.event_based_task.model.Event;
 import aura.event_based_task.model.User;
@@ -23,7 +25,8 @@ import java.util.stream.Collectors;
 
 
 @RestController
-@RequestMapping("/api/events")
+@RequestMapping("/api/v1/events")
+@io.swagger.v3.oas.annotations.tags.Tag(name = "Events", description = "Event management operations")
 public class EventController {
 
     private static final Logger logger = LoggerFactory.getLogger(EventController.class);
@@ -33,8 +36,21 @@ public class EventController {
     @Autowired private UserService userService;
 
     @GetMapping
-    public ResponseEntity<List<Event>> getAllEvents() {
-        return ResponseEntity.ok(eventService.getAllEvents());
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get all events",
+        description = "Retrieve paginated list of events with optional filtering by category and search term"
+    )
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+        responseCode = "200",
+        description = "Successfully retrieved events"
+    )
+    public ResponseEntity<PaginatedResponse<Event>> getAllEvents(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam(value = "category", required = false) String category,
+            @RequestParam(value = "search", required = false) String search) {
+        PaginatedResponse<Event> events = eventService.getAllEvents(page, size, category, search);
+        return ResponseEntity.ok(events);
     }
 
     @GetMapping("/my-events")
@@ -48,9 +64,18 @@ public class EventController {
     }
 
     @PostMapping
-    public ResponseEntity<Event> createEvent(@Valid @RequestBody Event event, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Create a new event",
+        description = "Create a new event with the provided details"
+    )
+    @io.swagger.v3.oas.annotations.responses.ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Event created successfully"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid input data"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized")
+    })
+    public ResponseEntity<Event> createEvent(@Valid @RequestBody CreateEventRequest request, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         User creator = authService.findByUsername(userDetails.getUsername());
-        Event createdEvent = eventService.createEvent(event, creator);
+        Event createdEvent = eventService.createEvent(request, creator);
         return ResponseEntity.ok(createdEvent);
     }
 
