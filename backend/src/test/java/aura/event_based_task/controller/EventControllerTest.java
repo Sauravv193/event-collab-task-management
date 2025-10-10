@@ -119,7 +119,7 @@ class EventControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(createEventRequest)))
                 .andExpect(status().isOk())
-                .andExpected(jsonPath("$.name").value("Test Event"));
+                .andExpect(jsonPath("$.name").value("Test Event"));
     }
 
     @Test
@@ -146,6 +146,6 @@ class EventControllerTest {
         mockMvc.perform(get("/api/events/1/is-member"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpected(content().string("true"));
+                .andExpect(content().string("true"));
     }
 }

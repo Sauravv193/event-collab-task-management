@@ -17,7 +17,7 @@ public class CreateTaskRequest {
     private String description;
 
     @NotNull(message = "Task status is required")
-    private ETaskStatus status = ETaskStatus.TODO;
+    private ETaskStatus status = ETaskStatus.TO_DO;
 
     @Min(value = 1, message = "Priority must be between 1 and 5")
     @Max(value = 5, message = "Priority must be between 1 and 5")
