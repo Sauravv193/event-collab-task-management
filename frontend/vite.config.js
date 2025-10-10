@@ -5,18 +5,12 @@ import { resolve } from 'path';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    react({
-      // Enable React refresh
-      fastRefresh: true,
-      // Include .jsx files
-      include: '**/*.{jsx,js}',
-    }),
+    react(),
   ],
   
   // Define global variables
   define: {
     global: 'globalThis',
-    __DEV__: JSON.stringify(process.env.NODE_ENV === 'development'),
   },
   
   // Path resolution
@@ -35,71 +29,29 @@ export default defineConfig({
   server: {
     port: 5173,
     host: true,
-    hmr: {
-      overlay: true,
-    },
   },
   
   // Build optimizations
   build: {
-    // Target modern browsers
-    target: 'esnext',
+    // Target es2015 for better compatibility
+    target: 'es2015',
     
-    // Enable minification
-    minify: 'terser',
+    // Use esbuild for minification (faster and more compatible than terser)
+    minify: 'esbuild',
     
-    // Terser options for better compression
-    terserOptions: {
-      compress: {
-        drop_console: process.env.NODE_ENV === 'production',
-        drop_debugger: true,
-      },
-    },
-    
-    // Rollup options
+    // Simplified rollup options
     rollupOptions: {
       output: {
-        // Manual chunks for better caching
+        // Simple manual chunks
         manualChunks: {
-          // Vendor chunks
-          'react-vendor': ['react', 'react-dom'],
-          'router': ['react-router-dom'],
-          'query': ['@tanstack/react-query'],
-          'ui': ['framer-motion', 'lucide-react'],
-          'utils': ['date-fns', 'axios'],
+          vendor: ['react', 'react-dom'],
+          router: ['react-router-dom'],
         },
-        
-        // Asset file naming
-        assetFileNames: (assetInfo) => {
-          const info = assetInfo.name.split('.');
-          let extType = info[info.length - 1];
-          
-          if (/\.(png|jpe?g|svg|gif|tiff|bmp|ico)$/i.test(assetInfo.name)) {
-            extType = 'images';
-          } else if (/\.(woff|woff2|eot|ttf|otf)$/i.test(assetInfo.name)) {
-            extType = 'fonts';
-          }
-          
-          return `assets/${extType}/[name]-[hash][extname]`;
-        },
-        
-        // Chunk file naming
-        chunkFileNames: 'assets/js/[name]-[hash].js',
-        entryFileNames: 'assets/js/[name]-[hash].js',
       },
-      
-      // External dependencies (if using CDN)
-      external: process.env.NODE_ENV === 'production' ? [] : [],
     },
     
-    // Source maps
-    sourcemap: process.env.NODE_ENV !== 'production',
-    
     // Chunk size warnings
-    chunkSizeWarningLimit: 1000,
-    
-    // Asset inlining threshold
-    assetsInlineLimit: 4096,
+    chunkSizeWarningLimit: 1600,
   },
   
   // Preview server (for production builds)
@@ -108,26 +60,12 @@ export default defineConfig({
     host: true,
   },
   
-  // CSS configuration
-  css: {
-    devSourcemap: true,
-    preprocessorOptions: {
-      // Add any CSS preprocessor options here
-    },
-  },
-  
   // Dependency optimization
   optimizeDeps: {
     include: [
       'react',
       'react-dom',
       'react-router-dom',
-      '@tanstack/react-query',
-      'framer-motion',
-      'lucide-react',
-      'date-fns',
-      'axios',
     ],
-    exclude: ['@tanstack/react-query-devtools'],
   },
 });
