@@ -6,7 +6,6 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build:wasm": "vite build --mode production",
     "vercel-build": "vite build",
     "preview": "vite preview"
   },
