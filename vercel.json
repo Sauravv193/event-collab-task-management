@@ -1,6 +1,6 @@
 {
   "buildCommand": "cd frontend && npm install --no-optional --ignore-scripts && npm run build",
-  "outputDirectory": "frontend/dist",
+  "outputDirectory": "dist",
   "installCommand": "cd frontend && npm install --no-optional --ignore-scripts",
   "framework": "vite",
   "rewrites": [
