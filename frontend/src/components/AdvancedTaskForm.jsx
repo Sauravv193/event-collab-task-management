@@ -6,7 +6,7 @@ import {
 } from 'lucide-react';
 import Button from './ui/Button';
 import Input from './ui/Input';
-import { notify } from '../services/notificationService';
+import { notify } from '../services/notificationService.jsx';
 
 const PRIORITIES = [
   { value: 1, label: 'Low', color: 'bg-gray-500', textColor: 'text-gray-700' },

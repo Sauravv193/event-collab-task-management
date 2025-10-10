@@ -3,7 +3,7 @@ import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 import { useAuth } from './AuthContext';
 import { useApp } from './AppContext';
-import { notify } from '../services/notificationService';
+import { notify } from '../services/notificationService.jsx';
 
 const SocketContext = createContext(null);
 

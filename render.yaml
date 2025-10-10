@@ -1,0 +1,27 @@
+services:
+  # Backend service (Spring Boot)
+  - type: web
+    name: event-collab-backend
+    env: java
+    buildCommand: cd backend && ./mvnw clean package -DskipTests
+    startCommand: cd backend && java -jar target/*.jar
+    envVars:
+      - key: PORT
+        value: 8080
+      - key: SPRING_PROFILES_ACTIVE
+        value: production
+    healthCheckPath: /actuator/health
+
+  # Frontend service (React)
+  - type: web
+    name: event-collab-frontend
+    env: static
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: frontend/dist
+    routes:
+      - type: rewrite
+        source: /api/*
+        destination: https://event-collab-backend.onrender.com/api/:splat
+      - type: rewrite
+        source: /*
+        destination: /index.html

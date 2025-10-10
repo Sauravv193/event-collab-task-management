@@ -9,7 +9,7 @@ import Button from './ui/Button';
 import Input from './ui/Input';
 import LazyImage from './ui/LazyImage';
 import FileUpload from './ui/FileUpload';
-import { notify } from '../services/notificationService';
+import { notify } from '../services/notificationService.jsx';
 
 const EVENT_CATEGORIES = [
   'Conference', 'Workshop', 'Meeting', 'Social', 'Training',

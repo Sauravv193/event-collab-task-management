@@ -5,7 +5,7 @@ import {
   X, Download, Eye, AlertCircle, CheckCircle 
 } from 'lucide-react';
 import Button from './Button';
-import { notify } from '../../services/notificationService';
+import { notify } from '../../services/notificationService.jsx';
 
 const FileUpload = ({
   onFileSelect,

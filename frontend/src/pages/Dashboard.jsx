@@ -9,7 +9,7 @@ import Button from '../components/ui/Button';
 import Modal from '../components/ui/Modal';
 import CreateEventForm from '../components/CreateEventForm';
 import { useApp } from '../context/AppContext';
-import { notify } from '../services/notificationService';
+import { notify } from '../services/notificationService.jsx';
 
 const Dashboard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);

@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { handleApiError, notify } from '../services/notificationService';
+import { handleApiError, notify } from '../services/notificationService.jsx';
 
 // App State
 const AppContext = createContext();
