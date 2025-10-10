@@ -48,6 +48,8 @@ export default defineConfig({
           router: ['react-router-dom'],
         },
       },
+      // Prevent external dependencies from causing issues
+      external: [],
     },
     
     // Chunk size warnings
