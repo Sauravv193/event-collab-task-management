@@ -9,14 +9,14 @@ COPY frontend/ .
 RUN npm run build
 
 # Backend build stage
-FROM maven:3.8.4-openjdk-17-slim as backend-builder
+FROM maven:3.9.4-openjdk-21-slim as backend-builder
 WORKDIR /app/backend
 COPY backend/pom.xml .
 COPY backend/src ./src
 RUN mvn clean package -DskipTests
 
 # Production stage
-FROM openjdk:17-jdk-slim
+FROM openjdk:21-jdk-slim
 WORKDIR /app
 
 # Copy backend jar

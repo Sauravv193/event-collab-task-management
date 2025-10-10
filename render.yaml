@@ -3,7 +3,8 @@ services:
   - type: web
     name: event-collab-backend
     env: java
-    buildCommand: cd backend && ./mvnw clean package -DskipTests
+    runtime: java21
+    buildCommand: cd backend && chmod +x ./mvnw && ./mvnw clean package -DskipTests
     startCommand: cd backend && java -jar target/*.jar
     envVars:
       - key: PORT
