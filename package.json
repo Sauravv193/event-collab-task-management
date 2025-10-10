@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "install:frontend": "cd frontend && npm install",
-    "build:frontend": "cd frontend && npm run build",
-    "build": "cd frontend && npm install && npm run build",
-    "dev:frontend": "cd frontend && npm run dev",
-    "preview:frontend": "cd frontend && npm run preview"
+    "install:frontend": "npm --prefix frontend install",
+    "build:frontend": "npm --prefix frontend run build",
+    "build": "npm --prefix frontend install && npm --prefix frontend run build",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "preview:frontend": "npm --prefix frontend run preview"
   },
   "workspaces": [
     "frontend"
