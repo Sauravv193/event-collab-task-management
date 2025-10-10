@@ -2,6 +2,11 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
 
+// Force Rollup to use WASM in CI environments
+if (process.env.CI) {
+  process.env.ROLLUP_USE_WASM = '1';
+}
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
@@ -50,6 +55,11 @@ export default defineConfig({
       },
       // Prevent external dependencies from causing issues
       external: [],
+    },
+    
+    // Force CommonJS for better compatibility
+    commonjsOptions: {
+      transformMixedEsModules: true,
     },
     
     // Chunk size warnings
