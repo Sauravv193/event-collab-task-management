@@ -1,0 +1,16 @@
+node_modules
+.git
+*.log
+.env.local
+.env.*.local
+coverage/
+.nyc_output/
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+backend/
+docker-compose.yml
+Dockerfile
+Dockerfile.backend
+render.yaml

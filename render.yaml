@@ -2,15 +2,13 @@ services:
   # Backend service (Spring Boot)
   - type: web
     name: event-collab-backend
-    env: java
-    runtime: java21
-    buildCommand: cd backend && chmod +x ./mvnw && ./mvnw clean package -DskipTests
-    startCommand: cd backend && java -jar target/*.jar
+    env: docker
+    dockerfilePath: ./Dockerfile.backend
     envVars:
       - key: PORT
         value: 8080
       - key: SPRING_PROFILES_ACTIVE
-        value: production
+        value: prod
       - key: SPRING_DATASOURCE_URL
         sync: false
       - key: SPRING_DATASOURCE_USERNAME
@@ -37,14 +35,24 @@ services:
         value: 1
       - key: DB_VALIDATE_ON_MIGRATE
         value: true
+      - key: HIBERNATE_DDL_AUTO
+        value: update
+      - key: JPA_SHOW_SQL
+        value: false
     healthCheckPath: /actuator/health
+    autoDeploy: true
 
   # Frontend service (React)
   - type: web
     name: event-collab-frontend
-    env: static
+    env: node
     buildCommand: cd frontend && npm install && npm run build
-    staticPublishPath: frontend/dist
+    startCommand: cd frontend && npm run preview
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: VITE_API_URL
+        value: https://event-collab-backend.onrender.com
     routes:
       - type: rewrite
         source: /api/(.*)

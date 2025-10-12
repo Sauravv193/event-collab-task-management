@@ -8,7 +8,6 @@ import aura.event_based_task.model.User;
 import aura.event_based_task.repository.EventRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -16,23 +15,30 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+
 import java.util.Set;
 
 @Service
+@Transactional
 public class EventService {
 
     private static final Logger logger = LoggerFactory.getLogger(EventService.class);
 
-    @Autowired private EventRepository eventRepository;
-    @Autowired private AuthService authService;
-    // *** FIX: Inject the messaging template to send WebSocket messages. ***
-    @Autowired private SimpMessagingTemplate messagingTemplate;
+    private final EventRepository eventRepository;
+    private final AuthService authService;
+    private final SimpMessagingTemplate messagingTemplate;
+
+    public EventService(EventRepository eventRepository, 
+                       AuthService authService,
+                       SimpMessagingTemplate messagingTemplate) {
+        this.eventRepository = eventRepository;
+        this.authService = authService;
+        this.messagingTemplate = messagingTemplate;
+    }
 
     @Cacheable(value = "events", key = "#page + '_' + #size + '_' + (#category != null ? #category : 'all') + '_' + (#search != null ? #search : 'all')")
     public PaginatedResponse<Event> getAllEvents(int page, int size, String category, String search) {
@@ -70,10 +76,13 @@ public class EventService {
 
     @Transactional
     public Event createEvent(CreateEventRequest request, User creator) {
-        Event event = new Event();
-        BeanUtils.copyProperties(request, event);
-        event.setCreatedBy(creator);
-        event.getMembers().add(creator);
+        Event event = new Event(
+            request.getName(),
+            request.getDescription(),
+            request.getDate(),
+            request.getLocation(),
+            creator
+        );
         Event savedEvent = eventRepository.save(event);
         logger.info("Event created: id={}, creator={}", savedEvent.getId(), creator.getUsername());
         return savedEvent;

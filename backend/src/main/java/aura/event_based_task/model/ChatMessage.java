@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "chat_messages")
-@Data
 public class ChatMessage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,4 +31,20 @@ public class ChatMessage {
     protected void onCreate() {
         timestamp = LocalDateTime.now();
     }
+
+    // Getters and setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public User getSender() { return sender; }
+    public void setSender(User sender) { this.sender = sender; }
+
+    public String getContent() { return content; }
+    public void setContent(String content) { this.content = content; }
+
+    public LocalDateTime getTimestamp() { return timestamp; }
+    public void setTimestamp(LocalDateTime timestamp) { this.timestamp = timestamp; }
+
+    public Event getEvent() { return event; }
+    public void setEvent(Event event) { this.event = event; }
 }

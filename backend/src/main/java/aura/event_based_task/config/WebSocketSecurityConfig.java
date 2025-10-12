@@ -1,30 +1,36 @@
 package aura.event_based_task.config;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.messaging.Message;
 import org.springframework.messaging.simp.SimpMessageType;
-import org.springframework.security.config.annotation.web.messaging.MessageSecurityMetadataSourceRegistry;
-import org.springframework.security.config.annotation.web.socket.AbstractSecurityWebSocketMessageBrokerConfigurer;
+import org.springframework.security.authorization.AuthorizationManager;
+import org.springframework.security.messaging.access.intercept.MessageMatcherDelegatingAuthorizationManager;
+import org.springframework.security.config.annotation.web.socket.EnableWebSocketSecurity;
 
 @Configuration
-public class WebSocketSecurityConfig extends AbstractSecurityWebSocketMessageBrokerConfigurer {
+@EnableWebSocketSecurity
+public class WebSocketSecurityConfig {
 
-    @Override
-    protected void configureInbound(MessageSecurityMetadataSourceRegistry messages) {
+    @Bean
+    public AuthorizationManager<Message<?>> messageAuthorizationManager() {
+        MessageMatcherDelegatingAuthorizationManager.Builder messages = MessageMatcherDelegatingAuthorizationManager.builder();
+        
         messages
-                // *** FIX: Allow all users to establish a connection. ***
-                // The AuthChannelInterceptor will then handle authentication.
-                .simpTypeMatchers(SimpMessageType.CONNECT, SimpMessageType.HEARTBEAT, SimpMessageType.UNSUBSCRIBE, SimpMessageType.DISCONNECT).permitAll()
-                // Messages sent to the app (e.g., sending a chat) require authentication
-                .simpDestMatchers("/app/**").authenticated()
-                // Subscriptions to topics require authentication
-                .simpSubscribeDestMatchers("/topic/**").authenticated()
-                // Any other message type is denied to prevent unauthorized actions.
-                .anyMessage().denyAll();
-    }
-
-    @Override
-    protected boolean sameOriginDisabled() {
-        // This is required to allow connections from different origins (e.g., your React frontend)
-        return true;
+            // Allow all users to establish a connection
+            .nullDestMatcher().permitAll()
+            // Allow CONNECT, HEARTBEAT, UNSUBSCRIBE, DISCONNECT
+            .simpTypeMatchers(SimpMessageType.CONNECT, 
+                            SimpMessageType.HEARTBEAT,
+                            SimpMessageType.UNSUBSCRIBE,
+                            SimpMessageType.DISCONNECT).permitAll()
+            // Require authentication for app destinations
+            .simpDestMatchers("/app/**").authenticated()
+            // Require authentication for topic subscriptions
+            .simpSubscribeDestMatchers("/topic/**").authenticated()
+            // Deny any other message type
+            .anyMessage().denyAll();
+            
+        return messages.build();
     }
 }

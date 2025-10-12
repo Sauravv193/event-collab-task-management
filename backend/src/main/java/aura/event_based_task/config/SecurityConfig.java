@@ -31,7 +31,7 @@ import java.util.List;
 @EnableCaching
 public class SecurityConfig {
 
-    @Value("${cors.allowed.origins:http://localhost:5173,http://localhost:3000}")
+    @Value("${app.cors.allowed-origins:http://localhost:5173,http://localhost:3000,https://vercel.app,https://*.vercel.app,https://event-collab-task-management-frontend.vercel.app}")
     private String allowedOrigins;
 
     @Bean
@@ -65,16 +65,17 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .csrf(csrf -> csrf.disable())
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**", "/ws/**"))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         // Public endpoints for authentication and WebSocket handshake
                         .requestMatchers("/api/auth/**", "/ws/**").permitAll()
                         // Allow Swagger documentation endpoints
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**").permitAll()
+                        // Allow health check endpoints
+                        .requestMatchers("/actuator/health", "/actuator/info", "/actuator/prometheus").permitAll()
                         // Allow anyone to view events and tasks
                         .requestMatchers(HttpMethod.GET, "/api/v1/events/**", "/api/v1/tasks/**", "/api/v1/events/{eventId}/is-member").permitAll()
-                        // *** FIX: Any other request MUST be authenticated. ***
                         // This simplifies the rules and relies on @PreAuthorize for specific actions.
                         .anyRequest().authenticated()
                 );

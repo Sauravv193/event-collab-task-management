@@ -1,7 +1,7 @@
 {
-  "buildCommand": "cd frontend && npm install --no-optional --ignore-scripts && npm run build",
-  "outputDirectory": "dist",
-  "installCommand": "cd frontend && npm install --no-optional --ignore-scripts",
+  "version": 2,
+  "buildCommand": "cd frontend && npm install && npm run build",
+  "outputDirectory": "frontend/dist",
   "framework": "vite",
   "rewrites": [
     {
@@ -10,7 +10,7 @@
     },
     {
       "source": "/(.*)",
-      "destination": "/index.html"
+      "destination": "/$1"
     }
   ]
 }

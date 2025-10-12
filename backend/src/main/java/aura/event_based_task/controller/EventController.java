@@ -5,13 +5,12 @@ import aura.event_based_task.dto.PaginatedResponse;
 import aura.event_based_task.exception.ResourceNotFoundException;
 import aura.event_based_task.model.Event;
 import aura.event_based_task.model.User;
-import aura.event_based_task.security.UserDetailsImpl;
+import java.security.Principal;
 import aura.event_based_task.service.AuthService;
 import aura.event_based_task.service.EventService;
 import aura.event_based_task.service.UserService;
 import jakarta.validation.Valid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +18,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -29,7 +28,6 @@ import java.util.stream.Collectors;
 @io.swagger.v3.oas.annotations.tags.Tag(name = "Events", description = "Event management operations")
 public class EventController {
 
-    private static final Logger logger = LoggerFactory.getLogger(EventController.class);
 
     @Autowired private EventService eventService;
     @Autowired private AuthService authService;
@@ -54,8 +52,11 @@ public class EventController {
     }
 
     @GetMapping("/my-events")
-    public ResponseEntity<Set<Event>> getMyEvents(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return ResponseEntity.ok(eventService.getMyEvents(userDetails.getUsername()));
+    public ResponseEntity<Set<Event>> getMyEvents(Principal principal) {
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        return ResponseEntity.ok(eventService.getMyEvents(principal.getName()));
     }
 
     @GetMapping("/{id}")
@@ -73,8 +74,11 @@ public class EventController {
         @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid input data"),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized")
     })
-    public ResponseEntity<Event> createEvent(@Valid @RequestBody CreateEventRequest request, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        User creator = authService.findByUsername(userDetails.getUsername());
+    public ResponseEntity<Event> createEvent(@Valid @RequestBody CreateEventRequest request, Principal principal) {
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        User creator = authService.findByUsername(principal.getName());
         Event createdEvent = eventService.createEvent(request, creator);
         return ResponseEntity.ok(createdEvent);
     }
@@ -87,18 +91,21 @@ public class EventController {
     }
 
     @PostMapping("/{eventId}/join")
-    public ResponseEntity<Event> joinEvent(@PathVariable Long eventId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        User user = authService.findByUsername(userDetails.getUsername());
+    public ResponseEntity<Event> joinEvent(@PathVariable Long eventId, Principal principal) {
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        User user = authService.findByUsername(principal.getName());
         Event updatedEvent = eventService.addUserToEvent(eventId, user);
         return ResponseEntity.ok(updatedEvent);
     }
 
     @GetMapping("/{eventId}/is-member")
-    public ResponseEntity<Boolean> isUserMember(@PathVariable Long eventId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        if (userDetails == null) {
+    public ResponseEntity<Boolean> isUserMember(@PathVariable Long eventId, Principal principal) {
+        if (principal == null) {
             return ResponseEntity.ok(false);
         }
-        boolean isMember = eventService.isUserMemberOfEvent(eventId, userDetails.getUsername());
+        boolean isMember = eventService.isUserMemberOfEvent(eventId, principal.getName());
         return ResponseEntity.ok(isMember);
     }
 

@@ -6,7 +6,13 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -23,7 +29,13 @@ import java.util.Set;
     @Index(name = "idx_task_event", columnList = "event_id"),
     @Index(name = "idx_task_created_at", columnList = "created_at")
 })
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@ToString(exclude = {"event", "dependencies", "dependentTasks"})
+@EqualsAndHashCode(exclude = {"event", "dependencies", "dependentTasks"})
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,6 +53,7 @@ public class Task {
     @Min(value = 1, message = "Priority must be between 1 and 5")
     @Max(value = 5, message = "Priority must be between 1 and 5")
     @Column(name = "priority")
+    @Builder.Default
     private Integer priority = 3; // Default to medium priority
     
     @Column(name = "deadline")
@@ -82,9 +95,11 @@ public class Task {
         joinColumns = @JoinColumn(name = "task_id"),
         inverseJoinColumns = @JoinColumn(name = "dependency_id")
     )
+    @Builder.Default
     private Set<Task> dependencies = new HashSet<>();
     
     @ManyToMany(mappedBy = "dependencies")
+    @Builder.Default
     private Set<Task> dependentTasks = new HashSet<>();
 }
 

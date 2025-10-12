@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.validation.BindException;
+
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -171,11 +171,11 @@ public class GlobalExceptionHandler {
 
     // Base error response class
     public static class ErrorResponse {
-        private LocalDateTime timestamp;
-        private int status;
-        private String error;
-        private String message;
-        private String path;
+        private final LocalDateTime timestamp;
+        private final int status;
+        private final String error;
+        private final String message;
+        private final String path;
 
         public ErrorResponse(LocalDateTime timestamp, int status, String error, String message, String path) {
             this.timestamp = timestamp;
@@ -195,7 +195,7 @@ public class GlobalExceptionHandler {
 
     // Validation error response class
     public static class ValidationErrorResponse extends ErrorResponse {
-        private Map<String, String> validationErrors;
+        private final Map<String, String> validationErrors;
 
         public ValidationErrorResponse(LocalDateTime timestamp, int status, String error, 
                                      String message, String path, Map<String, String> validationErrors) {
