@@ -21,12 +21,12 @@ export default defineConfig({
   // Path resolution
   resolve: {
     alias: {
-      '@': resolve(__dirname, 'src'),
-      '@components': resolve(__dirname, 'src/components'),
-      '@pages': resolve(__dirname, 'src/pages'),
-      '@services': resolve(__dirname, 'src/services'),
-      '@utils': resolve(__dirname, 'src/utils'),
-      '@context': resolve(__dirname, 'src/context'),
+      '@': resolve(__dirname, 'frontend/src'),
+      '@components': resolve(__dirname, 'frontend/src/components'),
+      '@pages': resolve(__dirname, 'frontend/src/pages'),
+      '@services': resolve(__dirname, 'frontend/src/services'),
+      '@utils': resolve(__dirname, 'frontend/src/utils'),
+      '@context': resolve(__dirname, 'frontend/src/context'),
     },
   },
   
