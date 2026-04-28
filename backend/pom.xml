@@ -142,7 +142,7 @@
 						</exclude>
 					</excludes>
 					<image>
-												<name>${project.artifactId}:${project.version}</name>
+						<name>${project.artifactId}:${project.version}</name>
 					</image>
 					<layers>
 						<enabled>true</enabled>
@@ -172,12 +172,16 @@
 						</path>
 					</annotationProcessorPaths>
 					<compilerArgs>
+						<arg>-Xlint:processing</arg>
+					</compilerArgs>
+					<compilerArgs>
 						<arg>-parameters</arg>
 						<arg>-Xlint:unchecked</arg>
 						<arg>-Xlint:deprecation</arg>
 					</compilerArgs>
 					<fork>true</fork>
 					<forceJavacCompilerUse>true</forceJavacCompilerUse>
+					<verbose>true</verbose>
 				</configuration>
 			</plugin>
 			<plugin>

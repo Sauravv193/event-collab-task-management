@@ -1,11 +1,8 @@
 package aura.event_based_task.dto;
 
 import jakarta.validation.constraints.*;
-import lombok.Data;
-
 import java.time.LocalDate;
 
-@Data
 public class CreateEventRequest {
 
     @NotBlank(message = "Event name is required")

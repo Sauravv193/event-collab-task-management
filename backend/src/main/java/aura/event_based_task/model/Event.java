@@ -9,7 +9,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -77,13 +76,11 @@ public class Event {
     
     @Column(name = "is_recurring")
     @Builder.Default
-    private Boolean isRecurring = false;
-    
+    private final Boolean isRecurring = false;
+
     @Size(max = 50, message = "Recurrence pattern must be less than 50 characters")
     @Column(name = "recurrence_pattern")
-    private String recurrencePattern; // DAILY, WEEKLY, MONTHLY, etc.
-    
-    @Column(name = "image_url")
+    private String recurrencePattern; // DAILY, WEEKLY, MONTHLY, etc.    @Column(name = "image_url")
     private String imageUrl;
     
     @CreationTimestamp
@@ -110,7 +107,7 @@ public class Event {
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonIgnore
     @Builder.Default
-    private Set<Task> tasks = new HashSet<>();
+    private final Set<Task> tasks = new HashSet<>();
 
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonIgnore
@@ -180,6 +177,26 @@ public class Event {
 
     public Integer getMaxParticipants() { return maxParticipants; }
     public void setMaxParticipants(Integer maxParticipants) { this.maxParticipants = maxParticipants; }
+
+    public String getCategory() { return category; }
+    public void setCategory(String category) { this.category = category; }
+
+    public String getTags() { return tags; }
+    public void setTags(String tags) { this.tags = tags; }
+
+    public Boolean getIsRecurring() { return isRecurring; }
+
+    public String getRecurrencePattern() { return recurrencePattern; }
+    public void setRecurrencePattern(String recurrencePattern) { this.recurrencePattern = recurrencePattern; }
+
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+
+    public LocalDateTime getCreatedAt() { return createdAt; }
+
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+
+    public Set<Task> getTasks() { return tasks; }
 
     public Set<ChatMessage> getChatMessages() { return chatMessages; }
     public void setChatMessages(Set<ChatMessage> chatMessages) { this.chatMessages = chatMessages; }

@@ -9,6 +9,14 @@
       "destination": "https://event-collab-backend.onrender.com/api/$1"
     },
     {
+      "source": "/actuator/(.*)",
+      "destination": "https://event-collab-backend.onrender.com/actuator/$1"
+    },
+    {
+      "source": "/ws/(.*)",
+      "destination": "https://event-collab-backend.onrender.com/ws/$1"
+    },
+    {
       "source": "/(.*)",
       "destination": "/$1"
     }

@@ -5,7 +5,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
@@ -21,7 +22,8 @@ import java.util.Set;
     @Index(name = "idx_user_email", columnList = "email"),
     @Index(name = "idx_user_created_at", columnList = "created_at")
 })
-@Data
+@Getter
+@Setter
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -64,7 +66,7 @@ public class User {
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     @Column(name = "role_name")
-    private Set<ERole> roles = new HashSet<>();
+    private final Set<ERole> roles = new HashSet<>();
 
     // *** FIX: Added cascade types to help Hibernate manage the relationship. ***
     @ManyToMany(mappedBy = "members", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -77,6 +79,7 @@ public class User {
     // It goes through all events the user is a member of and removes them,
     // which cleans up the 'event_members' join table and prevents database errors.
     @PreRemove
+    // @PreRemove - Handled by JPA lifecycle events
     private void preRemove() {
         for (Event event : events) {
             event.getMembers().remove(this);
@@ -99,6 +102,21 @@ public class User {
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+
+    public String getFullName() { return fullName; }
+    public void setFullName(String fullName) { this.fullName = fullName; }
+
+    public String getBio() { return bio; }
+    public void setBio(String bio) { this.bio = bio; }
+
+    public String getAvatarUrl() { return avatarUrl; }
+    public void setAvatarUrl(String avatarUrl) { this.avatarUrl = avatarUrl; }
+
+    public Set<ERole> getRoles() { return roles; }
+    public void setRoles(Set<ERole> roles) { this.roles.clear(); this.roles.addAll(roles); }
 
     public Set<Event> getEvents() { return events; }
     public void setEvents(Set<Event> events) { this.events = events; }
