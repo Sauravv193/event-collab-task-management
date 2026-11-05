@@ -27,7 +27,7 @@ const EventDetails = () => {
   });
 
   const isMember = Boolean(event?.members?.some(member => member.username === user?.username));
-  const isCreator = event?.createdBy.username === user.username;
+  const isCreator = Boolean(event?.createdBy?.username && event.createdBy.username === user?.username);
   const isExpired = event?.expired;
 
   const { data: messages, isLoading: messagesLoading } = useQuery({
