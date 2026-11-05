@@ -52,7 +52,7 @@ public class TaskService {
 
         task.setEvent(event);
         Task savedTask = taskRepository.save(task);
-        messagingTemplate.convertAndSend("/topic/tasks/" + eventId, savedTask);
+        messagingTemplate.convertAndSend("/topic/events/" + eventId + "/tasks", savedTask);
         logger.info("Task created: id={}, eventId={}, user={}", savedTask.getId(), eventId, username);
         return savedTask;
     }
