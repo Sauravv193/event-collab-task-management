@@ -1,8 +1,8 @@
-import api from './api';
+import { authApi } from './api';
 
 // Corresponds to POST /api/auth/signin
 export const loginUser = async (credentials) => {
-  const { data } = await api.post('/auth/signin', credentials);
+  const { data } = await authApi.post('/auth/signin', credentials);
   return data;
 };
 
