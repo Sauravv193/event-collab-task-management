@@ -26,7 +26,7 @@ const EventCard = ({ event }) => {
       </div>
       <div className="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-6">
         <User className="w-4 h-4 mr-2" />
-        Host: {event.createdBy.username}
+        Host: {event.createdBy?.username || 'Unknown'}
       </div>
       <div className="mt-auto">
         <Link to={`/event/${event.id}`} className="text-indigo-600 dark:text-indigo-400 font-semibold hover:underline">
