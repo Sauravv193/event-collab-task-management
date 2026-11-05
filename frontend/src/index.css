@@ -33,3 +33,16 @@ html{min-width:320px;scroll-behavior:smooth}body{@apply antialiased;margin:0;min
 .nav-link-active{background:var(--brand-soft);color:var(--brand)}
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}.event-card:hover{transform:none}}
+
+/* FullCalendar: keep controls and event surfaces consistent with the workspace theme. */
+.fc{color:var(--ink);font-family:'DM Sans',ui-sans-serif,system-ui,sans-serif}
+.fc .fc-toolbar-title{font-family:'Manrope',sans-serif;font-size:1.15rem;font-weight:800;letter-spacing:-.03em;color:var(--ink)}
+.fc .fc-button-primary{background:var(--brand);border-color:var(--brand);border-radius:.7rem;font-size:.78rem;font-weight:700;text-transform:capitalize;box-shadow:none}
+.fc .fc-button-primary:hover,.fc .fc-button-primary:focus{background:var(--brand-dark);border-color:var(--brand-dark);box-shadow:0 0 0 3px rgba(98,88,232,.15)}
+.fc .fc-button-primary:disabled{background:var(--brand);border-color:var(--brand);opacity:.5}
+.fc .fc-scrollgrid,.fc td,.fc th{border-color:var(--line)!important}
+.fc .fc-col-header-cell-cushion,.fc .fc-daygrid-day-number{color:var(--muted);font-size:.78rem;text-decoration:none}
+.fc .fc-day-today{background:var(--brand-soft)!important}
+.fc .fc-daygrid-event{border:0;border-radius:.45rem;padding:2px 4px;font-size:.72rem;font-weight:600}
+.fc .fc-popover{background:var(--surface-solid);border:1px solid var(--line);box-shadow:var(--shadow-raised)}
+@media(max-width:640px){.fc .fc-toolbar{align-items:flex-start;flex-direction:column;gap:.7rem}.fc .fc-toolbar-chunk{display:flex;max-width:100%;flex-wrap:wrap;gap:.25rem}.fc .fc-toolbar-title{font-size:1rem}.fc .fc-button{padding:.35rem .5rem!important;font-size:.7rem!important}}
