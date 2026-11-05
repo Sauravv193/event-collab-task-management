@@ -38,16 +38,16 @@ const CalendarView = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="container mx-auto p-4"
+      className="workspace-page"
     >
       <header className="mb-6">
-        <h1 className="text-3xl font-bold">Calendar View</h1>
-        <p className="text-gray-500 dark:text-gray-400">Your personal event schedule.</p>
+        <p className="workspace-eyebrow">Plan ahead</p><h1 className="workspace-title mt-1">Calendar</h1>
+        <p className="workspace-subtitle">See your joined events and open any event to continue collaborating.</p>
       </header>
 
       {error && <div className="text-red-500 p-4 bg-red-100 dark:bg-red-900/20 rounded-md">Error loading your events.</div>}
 
-      <div className={`p-4 bg-white/10 backdrop-blur-xl border border-white/20 shadow-lg rounded-2xl ${theme}`}>
+      <div className="surface-card overflow-hidden p-3 sm:p-5">
         <FullCalendar
           plugins={[dayGridPlugin, interactionPlugin]}
           initialView="dayGridMonth"
