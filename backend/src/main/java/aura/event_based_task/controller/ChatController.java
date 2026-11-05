@@ -45,7 +45,7 @@ public class ChatController {
 
             // The DTO now includes the sender's username, which is what the frontend expects
             ChatMessageDto broadcastMessage = new ChatMessageDto(sender.getUsername(), chatMessageDto.getContent());
-            messagingTemplate.convertAndSend("/topic/chat/" + eventId, broadcastMessage);
+            messagingTemplate.convertAndSend("/topic/events/" + eventId + "/chat", broadcastMessage);
 
             logger.debug("Message sent successfully by {} to event {}", sender.getUsername(), eventId);
         } catch (Exception e) {
