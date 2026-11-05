@@ -8,6 +8,6 @@ export const loginUser = async (credentials) => {
 
 // Corresponds to POST /api/auth/signup
 export const signupUser = async (userData) => {
-  const { data } = await api.post('/auth/signup', userData);
+  const { data } = await authApi.post('/auth/signup', userData);
   return data;
 };
