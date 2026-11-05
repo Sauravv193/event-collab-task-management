@@ -39,8 +39,7 @@ public class TaskService {
     public Task createTask(Task task, Long eventId) {
         Event event = eventService.getEventById(eventId);
 
-        // *** NEW: Prevent task creation for events that have already passed. ***
-        if (event.getDate().isBefore(LocalDate.now())) {
+        if (event.getDate() != null && event.getDate().isBefore(LocalDate.now())) {
             throw new AccessDeniedException("Cannot create tasks for an event that has already finished.");
         }
 
@@ -68,7 +67,8 @@ public class TaskService {
             task.setAssignedTo(taskDetails.getAssignedTo());
 
             Task updatedTask = taskRepository.save(task);
-            messagingTemplate.convertAndSend("/topic/tasks/" + updatedTask.getEvent().getId(), updatedTask);
+            Long eventId = updatedTask.getEvent().getId();
+            messagingTemplate.convertAndSend("/topic/events/" + eventId + "/tasks", updatedTask);
             logger.info("Task updated: id={}, user={}", taskId, username);
             return updatedTask;
         });
