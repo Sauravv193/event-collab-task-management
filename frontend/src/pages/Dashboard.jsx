@@ -34,7 +34,7 @@ const Dashboard = () => {
     return events.filter(event => {
       const matchesSearch = !searchTerm || 
         event.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        event.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (event.description || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
         event.location?.toLowerCase().includes(searchTerm.toLowerCase());
       
       const matchesCategory = !categoryFilter || event.category === categoryFilter;
