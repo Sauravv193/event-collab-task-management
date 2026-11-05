@@ -67,7 +67,7 @@ const EventDetails = () => {
 
   useEffect(() => {
     if (stompClient && stompClient.connected && id && isMember) {
-      const chatSubscription = stompClient.subscribe(`/topic/chat/${id}`, (message) => {
+      const chatSubscription = stompClient.subscribe(`/topic/events/${id}/chat`, (message) => {
         const newMessage = JSON.parse(message.body);
         // FIX: Update query data correctly to show new messages
         queryClient.setQueryData(['chat', id], (oldData) => {
