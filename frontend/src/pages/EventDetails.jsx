@@ -26,7 +26,7 @@ const EventDetails = () => {
     queryFn: () => getEventById(id),
   });
 
-  const isMember = event?.members.some(member => member.username === user.username);
+  const isMember = Boolean(event?.members?.some(member => member.username === user?.username));
   const isCreator = event?.createdBy.username === user.username;
   const isExpired = event?.expired;
 
