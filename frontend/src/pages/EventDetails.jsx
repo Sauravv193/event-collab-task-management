@@ -76,7 +76,7 @@ const EventDetails = () => {
         });
       });
 
-      const taskSubscription = stompClient.subscribe(`/topic/tasks/${id}`, () => {
+      const taskSubscription = stompClient.subscribe(`/topic/events/${id}/tasks`, () => {
         queryClient.invalidateQueries({ queryKey: ['tasks', id] });
       });
 
