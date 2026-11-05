@@ -28,7 +28,7 @@ const TaskItem = ({ task, eventId, isCreator }) => {
       </div>
       {task.description && <p className="mt-2 line-clamp-3 text-xs leading-5 muted-text">{task.description}</p>}
       <div className="mt-3 flex items-center justify-between gap-2 border-t pt-3" style={{ borderColor: 'var(--line)' }}>
-        <span className="inline-flex min-w-0 items-center gap-1.5 truncate text-[10px] font-medium muted-text"><CalendarClock size={12} />{task.assignedTo || 'Unassigned'}</span>
+        <span className="inline-flex min-w-0 items-center gap-1.5 truncate text-[10px] font-medium muted-text"><CalendarClock size={12} />{typeof task.assignedTo === 'string' ? task.assignedTo : task.assignedTo?.username || 'Unassigned'}</span>
         <select aria-label={'Change status for ' + task.name} value={task.status || 'TO_DO'} onChange={handleStatusChange} disabled={updateMutation.isPending} className="max-w-[130px] rounded-lg border px-2 py-1.5 text-[10px] font-bold disabled:opacity-50" style={{ background: 'var(--surface-muted)', color: 'var(--ink)', borderColor: 'var(--line)' }}>
           <option value="TO_DO">To do</option><option value="IN_PROGRESS">In progress</option><option value="DONE">Done</option>
         </select>
